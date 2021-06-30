@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1625060937 source:c:\users\arthu\documents\github\aed-fes---hotel-descanso-garantido\hotel_descanso_garantido\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+
