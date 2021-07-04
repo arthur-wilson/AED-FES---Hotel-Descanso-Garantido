@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include "room/room.c"
 
 int main()
 {
@@ -13,11 +14,11 @@ int main()
         printf("-------| Hotel Descanso Garantido |-------\n\n");
 
         printf("\t1 - Cadastrar Cliente\n");
-        printf("\t2 - Cadastrar Funcionário\n");
+        printf("\t2 - Cadastrar Funcionï¿½rio\n");
         printf("\t3 - Cadastrar Estadia\n");
         printf("\t4 - Cadastrar Quarto\n");
 
-        printf("\nDigite o número da opção desejada: ");
+        printf("\nDigite o nï¿½mero da opï¿½ï¿½o desejada: ");
         scanf("%i", &user_menuOption);
         fflush(stdin);
 
@@ -33,14 +34,15 @@ int main()
                 break;
 
             case 4:
+                registerRoom();
                 break;
 
             default:
-                printf("\n**Opção Inválida! Tente novamente**");
+                printf("\n**Opï¿½ï¿½o Invï¿½lida! Tente novamente**");
                 getchar();
                 fflush(stdin);
         }
-        system("cls");
+        system("cls || clear");
 
     } while(user_menuOption != 0);
 
