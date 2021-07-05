@@ -12,7 +12,7 @@ struct Scliente
     double telefone;
 };
 typedef struct Scliente cliente;
-
+/*teste*/
 struct Sfuncionario
 {
     int id;
