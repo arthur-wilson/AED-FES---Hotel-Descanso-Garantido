@@ -38,6 +38,14 @@ int saveRoom(Room room)
     fclose(roomDatabase);
 }
 
+void printRoom(Room room)
+{
+    printf("Número do quarto: %i", room.id);
+    printf("Número máximo de hóspedes: %i", room.maxNumberOfGuests);
+    printf("Valor da diária: %.2lf", room.valuePerDay);
+    printf("Status do quarto: %i", room.status ? "OCUPADO" : "DESOCUPADO");
+}
+
 ReturnRoom getRoomById(int searchId)
 {
     FILE *roomDatabase = openRoomDatabase();
@@ -111,9 +119,9 @@ ReturnRoom getRoomByNumberOfGuests(int searchNumberOfGuests)
 
         if (!isRoomOccupied)
         {
-            
+
             int roomMaxNumberOfGuests = foundedRoom.maxNumberOfGuests;
-            int currentDiif = subtractMinOnMax(searchNumberOfGuests,roomMaxNumberOfGuests);
+            int currentDiif = subtractMinOnMax(searchNumberOfGuests, roomMaxNumberOfGuests);
 
             if (diffBetweenRoomGuestsAndSearchNumGuests >= currentDiif && roomMaxNumberOfGuests >= currentBestFitFounded)
             {
