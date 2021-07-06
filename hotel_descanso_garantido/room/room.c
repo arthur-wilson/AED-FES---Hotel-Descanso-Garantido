@@ -1,5 +1,8 @@
-// #include "room.h"
+#include "room.h"
+#include "../utils/numbers.c"
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 
 typedef struct
 {
@@ -32,7 +35,7 @@ int saveRoom(Room room)
 
     fseek(roomDatabase, 0, SEEK_END);
     fwrite(&room, roomByteSize, 1, roomDatabase);
-    fflush(roomDatabase);
+    fclose(roomDatabase);
 }
 
 ReturnRoom getRoomById(int searchId)
@@ -61,7 +64,70 @@ ReturnRoom getRoomById(int searchId)
             isEndOfDatabase = feof(roomDatabase);
         }
     }
+    fclose(roomDatabase);
+    return returnRoom;
+}
 
+void showAllRooms()
+{
+    FILE *roomDatabase = openRoomDatabase();
+    Room foundedRoom;
+
+    unsigned long sizeOfRoomInBytes = sizeof(foundedRoom);
+
+    fseek(roomDatabase, 0, SEEK_SET);
+    fread(&foundedRoom, sizeOfRoomInBytes, 1, roomDatabase);
+    int isEndOfDatabase = feof(roomDatabase);
+
+    while (!isEndOfDatabase)
+    {
+        printf("Id: %i\n", foundedRoom.id);
+        printf("maxNumberOfGuests: %i\n", foundedRoom.maxNumberOfGuests);
+        printf("Status: %i\n", foundedRoom.status);
+        fread(&foundedRoom, sizeOfRoomInBytes, 1, roomDatabase);
+        isEndOfDatabase = feof(roomDatabase);
+    }
+    fclose(roomDatabase);
+}
+
+ReturnRoom getRoomByNumberOfGuests(int searchNumberOfGuests)
+{
+    FILE *roomDatabase = openRoomDatabase();
+    Room foundedRoom;
+    ReturnRoom returnRoom = {.containsRoom = 0};
+
+    int diffBetweenRoomGuestsAndSearchNumGuests = INT_MAX;
+    int currentBestFitFounded = 0;
+
+    unsigned long sizeOfRoomInBytes = sizeof(foundedRoom);
+
+    fseek(roomDatabase, 0, SEEK_SET);
+    fread(&foundedRoom, sizeOfRoomInBytes, 1, roomDatabase);
+    int isEndOfDatabase = feof(roomDatabase);
+
+    while (!isEndOfDatabase)
+    {
+        int isRoomOccupied = foundedRoom.status;
+
+        if (!isRoomOccupied)
+        {
+            
+            int roomMaxNumberOfGuests = foundedRoom.maxNumberOfGuests;
+            int currentDiif = subtractMinOnMax(searchNumberOfGuests,roomMaxNumberOfGuests);
+
+            if (diffBetweenRoomGuestsAndSearchNumGuests >= currentDiif && roomMaxNumberOfGuests >= currentBestFitFounded)
+            {
+                diffBetweenRoomGuestsAndSearchNumGuests = currentDiif;
+                currentBestFitFounded = roomMaxNumberOfGuests;
+
+                returnRoom.containsRoom = 1;
+                returnRoom.room = foundedRoom;
+            }
+        }
+        fread(&foundedRoom, sizeOfRoomInBytes, 1, roomDatabase);
+        isEndOfDatabase = feof(roomDatabase);
+    }
+    fclose(roomDatabase);
     return returnRoom;
 }
 
@@ -80,25 +146,43 @@ void registerRoom()
 
     printf("Insira o número do quarto que deseja cadastrar: ");
     scanf("%i", &roomId);
-
-    if (!isRoomAlreadyInDatabase(roomId))
+    if (!isNegativeNumber(roomId))
     {
+        if (!isRoomAlreadyInDatabase(roomId))
+        {
+            printf("Insira o número máximo de pessoas que o quarto suporta: ");
+            scanf("%i", &maxNumberOfGuests);
+            if (!isNegativeNumber(maxNumberOfGuests))
+            {
+                printf("Insira o valor da diária: ");
+                scanf("%lf", &valuePerDay);
+                if (!isNegativeNumber(valuePerDay))
+                {
+                    Room newRoom = {
+                        .id = roomId,
+                        .maxNumberOfGuests = maxNumberOfGuests,
+                        .valuePerDay = valuePerDay,
+                        .status = roomDefaultStatus};
 
-        printf("Insira o número máximo de pessoas que o quarto suporta: ");
-        scanf("%i", &maxNumberOfGuests);
-        printf("Insira o valor da diária: ");
-        scanf("%lf", &valuePerDay);
-
-        Room newRoom = {
-            .id = roomId,
-            .maxNumberOfGuests = maxNumberOfGuests,
-            .valuePerDay = valuePerDay,
-            .status = roomDefaultStatus};
-
-        saveRoom(newRoom);
+                    saveRoom(newRoom);
+                }
+                else
+                {
+                    printf("O valor da diária não deve ser negativo!\n");
+                }
+            }
+            else
+            {
+                printf("O número de hospedes não deve ser negativo!\n");
+            }
+        }
+        else
+        {
+            printf("Um Quarto com esse número já existe!\n");
+        }
     }
     else
     {
-        printf("Um Quarto com esse número já existe!");
+        printf("O número do quarto não deve ser negativo!\n");
     }
 }

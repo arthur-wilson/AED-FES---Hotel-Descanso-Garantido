@@ -3,6 +3,7 @@
 #include <string.h>
 #include <conio.h>
 #include <locale.h>
+#include "room/room.c"
 
 struct Scliente
 {
@@ -97,11 +98,16 @@ int main()
             localizaFuncionario(pfuncionario);
             system("pause");
             break;
+        
+        case 5:
+            registerRoom();
+            system("pause");
+            break;
 
         case 7:
             mostraMenu2();
             op2=getch();
-            system("cls");
+            system("cls || clear");
             switch (op2)
             {
             case 'a':
@@ -124,13 +130,14 @@ int main()
 //Menu Principal
 void mostraMenu()
 {
-    system("cls");
+    system("cls || clear");
     printf("\nBem Vindo ao Hotel Descanso Garantido!\n");
     printf("\n=======================================");
     printf("\n[1]-Cadastrar Cliente");
     printf("\n[2]-Pesquisar Cliente");
     printf("\n[3]-Cadastrar Funcionario");
     printf("\n[4]-Pesquisar Funcionario");
+    printf("\n[5]-Cadastrar quarto");
     printf("\n[5]-Cadastrar Estadia");
     printf("\n[6]-Fechar Estadia");
     printf("\n[7]-Mostrar informacoes");
@@ -143,7 +150,7 @@ void mostraMenu()
 //Menu de Informações
 void mostraMenu2()
 {
-    system("cls");
+    system("cls || clear");
 
     printf("\n");
     printf("\n================================================");
@@ -246,7 +253,7 @@ void cadastroCliente(FILE *pcliente)
 //Função Localiza Cliente
 void localizaCliente(FILE *f)
 {
-    system("cls");
+    system("cls || clear");
     int idteste,teste=0;
 
     printf("\n================Localiza Cliente================\n\n");
@@ -327,7 +334,7 @@ void cadastroFuncionario(FILE *pfuncionario)
 
 void localizaFuncionario(FILE *f)
 {
-    system("cls");
+    system("cls || clear");
     int idteste,teste=0;
 
     printf("\n================Localiza Funcionário================\n\n");
